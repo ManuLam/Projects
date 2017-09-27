@@ -11,7 +11,7 @@ public class eightQueen {
 
 
 
-    		//	a[i][c] = 0;
+    			a[i][c] = 0;
 
 
     		}
