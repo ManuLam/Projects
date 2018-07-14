@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="mystyle.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="annotator/css/annotorious.css" />
+	<script type="text/javascript" src="annotator/annotorious.debug.js"></script>
+
+	<link type="text/css" rel="stylesheet" href="annotator/removed/annotator.min.css" />
+	<script type="text/javascript" src="annotator/removed/annotator-full.min.js"></script>
+
+<header role="navigation" class="navbar navbar-fixed-top moodle-has-zindex">
+	<nav class="navbar-inner nuiminner">
+		<div id="logo">
+			<ul class="nav" style="width: 100%">
+				<li>
+					<a class="homelink" href="file:///C:/Users/manul/Desktop/project/main.html">
+						<img src="https://2018.moodle.maynoothuniversity.ie/theme/image.php/nuim/theme/1529319859/nuim-logo" class="sitelogo">
+						Skill Learn
+					</a>
+				</li>
+				<li style="float: right;">
+						<div class="userLoggedOn" href="file:///C:/Users/manul/Desktop/project/main.html">
+								<img src="dog.jpg" class="userIcon" height="40" width="40" style="padding-right: 5px">
+								Welcome Jas
+								<div class="dropdown-content">
+									<a href="#">Logout</a>
+								</div>
+						</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</header>
+
+	<div class="sidenav" style="padding-left: 5px">
+			<li><b>Folder</b></li>
+				<ul>
+					<li>picture1</li>
+					<li><b>Folder1</b></li>
+						<ul>
+							<li>data1</li>
+							<li>data2</li>
+							<li><b>Folder3</b></li>
+								<ul>
+									<li>data13</li>
+									<li>data14</li>
+								</ul>
+						</ul>
+					<li>picture2</li>
+					<li>pdf</li>
+				</ul>
+	</div>
+
+	<div id="comment-wrapper">
+	    <h4>Comments</h4>
+	    <div class="comment-list">
+	      <div class="comment-list-container">
+	        <div class="comment-list-item">No comments</div>
+	      </div>
+	      <form class="comment-list-form" style="display:none;">
+	        <input type="text" placeholder="Add a Comment"/>
+	      </form>
+	    </div>
+  	</div>
+</head>
+
+
+<body>
+	<center><img src="riot.jpg" class="annotatable" style="background-color:#8d322c; display: block; width: 794px;"/></center>
+
+	<div class="t1" id="annotate" style="margin: auto; text-align: center; width: 794px">
+		<p>Now is the winter of our discontent
+		Made glorious summer by this sun of York;
+		And all the clouds that lour'd upon our house
+		In the deep bosom of the ocean buried.
+		Now are our brows bound with victorious wreaths;
+		Our bruised arms hung up for monuments;
+		Our stern alarums changed to merry meetings,
+		Our dreadful marches to delightful measures.
+		Grim-visaged war hath smooth'd his wrinkled front;
+		And now, instead of mounting barded steeds
+		To fright the souls of fearful adversaries,
+		He capers nimbly in a lady's chamber
+		To the lascivious pleasing of a lute.
+		But I, that am not shaped for sportive tricks,
+		Nor made to court an amorous looking-glass;
+		I, that am rudely stamp'd, and want love's majesty
+		To strut before a wanton ambling nymph;
+		I, that am curtail'd of this fair proportion</p>
+	</div>
+
+	<div class="checkContainer">
+		<label class="container">Show Group 1
+			  <input type="checkbox" checked="checked">
+			  <span class="checkmark"></span>
+		</label>
+		<label class="container">Show Group 2
+			  <input type="checkbox" checked="checked">
+			  <span class="checkmark"></span>
+		</label>
+		<label class="container">Show Group 3
+			  <input type="checkbox" checked="checked">
+			  <span class="checkmark"></span>
+		</label>
+		<label class="container">Show Everyone
+			  <input type="checkbox" checked="checked">
+			  <span class="checkmark"></span>
+		</label>
+	</div>
+
+	<!--<object align="middle" data="CS240 Guidance Summer 2018.pdf" style="display: block; margin-left: auto; margin-right: auto; width: 794px; height: 750px">pdf</object> -->
+
+</body>
+
+	<script>
+		var ann = new Annotator(document.getElementById("annotate")); 
+	</script>
+
+</html

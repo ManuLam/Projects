@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    
+    <link type="text/css" rel="stylesheet" href="./js/annotator/css/annotorious.css" />
+    <script type="text/javascript" src="./js/annotator/annotorious.debug.js"></script>
+    <script type="text/javascript" src="./js/annotator/anno-colors.js"></script>
+    <script type="text/javascript" src="./js/annotator/anno-fancybox.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="./js/annotator/annotatorText/annotator.min.css" />
+    <script type="text/javascript" src="./js/annotator/annotatorText/annotator-full.min.js"></script>
+
+    <link rel="stylesheet" href="./js/annotator/taggings/semantic-tagging-plugin.css" type="text/css" />
+    <script src="./js/annotator/taggings/semantic-tagging-plugin.js"></script>
+    <script src="./js/annotator/taggings/editor-extension.js"></script>
+
+    <script type="text/javascript" src="./shared/comment.js"></script>
+
+
+<header role="navigation" class="navbar navbar-fixed-top moodle-has-zindex">
+    <nav class="navbar-inner nuiminner">
+        <div id="logo">
+            <ul class="nav" style="width: 100%">
+                <li>
+                    <a class="homelink" href="file:///C:/Users/manul/Desktop/project/main.html">
+                        <img src="https://2018.moodle.maynoothuniversity.ie/theme/image.php/nuim/theme/1529319859/nuim-logo" class="sitelogo">
+                        Skill Learn
+                    </a>
+                </li>
+                <li style="float: right;">
+                        <div class="userLoggedOn" href="file:///C:/Users/manul/Desktop/project/main.html">
+                                <img src="./images/dog.jpg" class="userIcon" height="40" width="40" style="padding-right: 5px">
+                                Welcome Jas
+                                <div class="dropdown-content">
+                                    <a href="login.html">Logout</a>
+                                </div>
+                        </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+    <div class="sidenav" style="padding-left: 5px">
+            <li><b>Folder</b></li>
+                <ul>
+                    <li>picture1</li>
+                    <li><b>Folder1</b></li>
+                        <ul>
+                            <li>data1</li>
+                            <li>data2</li>
+                            <li><b>Folder3</b></li>
+                                <ul>
+                                    <li>data13</li>
+                                    <li>data14</li>
+                                </ul>
+                        </ul>
+                    <li>picture2</li>
+                    <li>pdf</li>
+                </ul>
+    </div>
+
+    <div id="comment-wrapper">
+        <h4>Comments</h4>
+        <div class="comment-list">
+          <div class="comment-list-container">
+            <div class="comment-list-item">No Comments</div>
+          </div>
+              <div  class="comment-list-form" style="visibility: hidden;"">
+                <input type="text" id="comment" style="width:95%" placeholder="Add a Comment" />
+                <button id="commentClick" onclick="insertComment();resetComment();" style="width:95%">Submit</button>
+              </div>
+          </div>
+    </div>
+
+</head>
+
+
+<body>
+
+
+     <div ng-app="" style="margin:auto; text-align: center; margin-bottom: 15px">
+        <form method="POST" action="/post-feedback" style="margin: auto; width: 794px;">
+            <label>Username:<input type="text" name="username" value = "16458032" required></label><br>
+            <label>Annotation:<input type="text" id="displayAnnotationsInput" name="annotation" required></label><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+        <!--Place image for annotations here-->
+    <center><img id="myImage" src="./images/riot.jpg" class="annotatable" style="background-color:#8d322c; display: block; width: 794px;"/></center>
+
+    <!--Place text for annotations here-->
+    <div class="t1" id="annotate" style="margin: auto; text-align: center; width: 794px">
+        <p>Now is the winter of our discontent
+        Made glorious summer by this sun of York;
+        And all the clouds that lour'd upon our house
+        In the deep bosom of the ocean buried.
+        Now are our brows bound with victorious wreaths;
+        Our bruised arms hung up for monuments;
+        Our stern alarums changed to merry meetings,
+        Our dreadful marches to delightful measures.
+        Grim-visaged war hath smooth'd his wrinkled front;
+        And now, instead of mounting barded steeds
+        To fright the souls of fearful adversaries,
+        He capers nimbly in a lady's chamber
+        To the lascivious pleasing of a lute.
+        But I, that am not shaped for sportive tricks,
+        Nor made to court an amorous looking-glass;
+        I, that am rudely stamp'd, and want love's majesty
+        To strut before a wanton ambling nymph;
+        I, that am curtail'd of this fair proportion</p>
+    </div>
+
+    <div class="checkContainer">
+        <label class="container">Show Group 1
+              <input id="g1" type="checkbox" checked="checked" onchange="showgroup1();">
+              <span class="checkmark"></span>
+        </label>
+        <label class="container">Show Group 2
+              <input id="g2" type="checkbox" checked="checked" onchange="showgroup2();">
+              <span class="checkmark"></span>
+        </label>
+        <label class="container">Show Group 3
+              <input id="g3" type="checkbox" checked="checked" onchange="showgroup3();">
+              <span class="checkmark"></span>
+        </label>
+        <label class="container">Show Group 4
+              <input id="g4" type="checkbox" checked="checked" onchange="showgroup4();">
+              <span class="checkmark"></span>
+        </label>
+    </div>
+
+    <div ng-app="" style="margin:auto; text-align: center;">
+        <textarea id="displayAnnotations" style="margin: auto; text-align: center"></textarea>
+    </div>
+
+    <!--<object align="middle" data="CS240 Guidance Summer 2018.pdf" style="display: block; margin-left: auto; margin-right: auto; width: 794px; height: 750px">pdf</object> -->
+
+</body>
+
+    <script>
+        var group1 = [{"src":"http://localhost:4000/images/riot.jpg","text":"g1","shapes":[{"type":"rect","geometry":{"x":0.08690176322418136,"y":0.08501118568232663,"width":0.13476070528967254,"height":0.19015659955257272},"style":{}}],"context":"http://localhost:4000/ss.html"},{"src":"http://localhost:4000/images/riot.jpg","text":"g1","shapes":[{"type":"rect","geometry":{"x":0.16750629722921914,"y":0.1297539149888143,"width":0.11335012594458438,"height":0.21923937360178972},"style":{}}],"context":"http://localhost:4000/ss.html"},{"src":"http://localhost:4000/images/riot.jpg","text":"g1","shapes":[{"type":"rect","geometry":{"x":0.21788413098236775,"y":0.27293064876957496,"width":0.13476070528967254,"height":0.1476510067114094},"style":{}}],"context":"http://localhost:4000/ss.html"}];
+
+        var group2 = [{"src":"http://localhost:4000/images/riot.jpg","text":"g2","shapes":[{"type":"rect","geometry":{"x":0.7468513853904282,"y":0.15883668903803133,"width":0.10075566750629723,"height":0.15212527964205816},"style":{}}],"context":"http://localhost:4000/ss.html"},{"src":"http://localhost:4000/images/riot.jpg","text":"g2","shapes":[{"type":"rect","geometry":{"x":0.7808564231738035,"y":0.2348993288590604,"width":0.1309823677581864,"height":0.1297539149888143},"style":{}}],"context":"http://localhost:4000/ss.html"},{"src":"http://localhost:4000/images/riot.jpg","text":"g2","shapes":[{"type":"rect","geometry":{"x":0.7493702770780857,"y":0.3378076062639821,"width":0.03904282115869018,"height":0.10961968680089486},"style":{}}],"context":"http://localhost:4000/ss.html"}];
+
+        var group3 = [{"src":"http://localhost:4000/images/riot.jpg","text":"g3","shapes":[{"type":"rect","geometry":{"x":0.14483627204030228,"y":0.6599552572706935,"width":0.10957178841309824,"height":0.12527964205816555},"style":{}}],"context":"http://localhost:4000/ss.html"},{"src":"http://localhost:4000/images/riot.jpg","text":"g3","shapes":[{"type":"rect","geometry":{"x":0.24307304785894207,"y":0.7740492170022372,"width":0.07052896725440806,"height":0.053691275167785234},"style":{}}],"context":"http://localhost:4000/ss.html"}];
+
+        var group4 = [{"src":"http://localhost:4000/images/riot.jpg","text":"g4","shapes":[{"type":"rect","geometry":{"x":0.7871536523929471,"y":0.6554809843400448,"width":0.11460957178841309,"height":0.18568232662192394},"style":{}}],"context":"http://localhost:4000/ss.html"}];
+
+        anno.addPlugin('FancyBoxSelector', { activate: true });
+        anno.addPlugin('SemanticTagging', {});
+
+        window.onload = function(){
+            anno.addPlugin('ColorPlugin', {
+            img_id: 'myImage',
+              color_list: [
+                { label: 'Green', color: 'lime' },
+                { label: 'Red', color: 'red' },
+                { label: 'Pink', color: 'pink' },
+              ],
+              // controller: false,
+            });
+
+            var demo_colors = ['red', 'lime', 'blue', 'yellow', 'pink'];
+            addAllAnnotations();setDiv();
+        }
+
+        function setDiv() {
+            document.getElementById("displayAnnotationsInput").value = showAnnotations();
+            document.getElementById("displayAnnotations").value = showAnnotationsData();
+        }
+
+
+    // Comment stuff
+      var commentList = document.querySelector('#comment-wrapper .comment-list-container');
+      var commentForm = document.querySelector('#comment-wrapper .comment-list-form');
+      var commentText = commentForm.querySelector('input[type="text"]');
+      var container = document.querySelector('#semtagging-editor-container');
+      var popupContainer = document.querySelector('#semtagging-popup-container');
+
+
+      function supportsComments(target) {
+        return true;
+      }
+
+        document.querySelector("#comment").addEventListener("keyup", event => {
+            if(event.key !== "Enter") return; // Use `.key` instead.
+            document.querySelector("#commentClick").click(); // Things you want to do.
+        });
+
+        function resetComment() {
+            document.querySelector("#comment").value = "";
+        }
+
+
+        var store = [];
+        var storeText = [];
+        var key = 0;
+        var bool = false;
+        var max = 0;
+
+        function findAnnotations() {
+            var s = anno.getAnnotations();
+            if(bool == false) {
+              for(var i = 0; i < s.length; i++) {
+                store[i] = JSON.stringify(s[i].shapes);
+                storeText[i] = new Array();
+                max = i;
+              }
+            }
+
+            if(bool == true) {
+              //alert(max +" " + s.length);
+              if(max < s.length) {
+                for(var i = max+1; i < s.length; i++) {
+                  store[i] = JSON.stringify(s[i].shapes);
+                  storeText[i] = new Array();
+                  max = i;
+                }
+              }
+            }
+            bool = true;
+        }
+
+        function insertComment(annotation) {
+            var dt = new Date();
+            var utcDate = dt.toUTCString();
+            findAnnotations();
+
+            var user = "16458032";
+            var comment = document.getElementById("comment").value;
+            var child = document.createElement('div');
+            child.className = 'comment-list-item';
+            child.innerHTML = utcDate + "<br>" + user + ": " + comment;
+
+
+            for(var i = 0; i < store.length; i++) {
+              try {if(store[i] == JSON.stringify(annotation.shapes)) key = i;}
+              catch(e){}
+            }
+            
+
+            for(var j = 0; j < storeText[key].length; j++) 
+              commentList.appendChild(storeText[key][j]);
+            //alert(key);
+            (comment == "") ? null :  document.getElementById("displayAnnotations").value += child.innerHTML + "\n";
+            (comment == "") ? null : storeText[key].push(child);
+            (comment == "") ? null : commentList.appendChild(child);
+      }
+
+
+      function handleAnnotationClick(annotation) {
+        if (supportsComments(annotation)) {
+          commentList.innerHTML = '';
+          commentForm.style.visibility = "visible";
+          document.querySelector("#comment").value = "";
+          document.querySelector("#comment").focus();
+          insertComment(annotation);
+        }
+    }
+
+      function handleAnnotationBlur(annotation) {
+        if (supportsComments(annotation)) {
+          commentList.innerHTML = '';
+          commentForm.style.visibility = "hidden";
+          commentForm.onsubmit = null;
+
+         var child = document.createElement('div');
+          child.className = 'comment-list-item';
+          child.innerHTML = 'No Comments';
+          commentList.appendChild(child);
+        }
+      }
+
+      //anno.addHandler('onAnnotationClicked', function(annotation) {handleAnnotationClick(annotation);});
+      anno.addHandler('onPopupShown', function(annotation) {handleAnnotationClick(annotation);});
+      //anno.addHandler('beforePopupHide', function(annotation) {handleAnnotationBlur(annotation);});
+      //anno.addHandler('onMouseOutOfItem', function(annotation) {handleAnnotationBlur(annotation);});
+      anno.addHandler('onMouseOutOfAnnotation', function(annotation) {handleAnnotationBlur(annotation);});
+
+        function showgroup1() {showGroupAnnotations(group1, "g1");}
+        function showgroup2() {showGroupAnnotations(group2, "g2");}  
+        function showgroup3() {showGroupAnnotations(group3, "g3");}  
+        function showgroup4() {showGroupAnnotations(group4, "g4");} 
+
+        anno.setProperties({
+          outline: 'red',
+          stroke: 'red',
+          hi_stroke: 'blue'
+        });
+
+        //show and save
+        function showAnnotations() {
+          return JSON.stringify(anno.getAnnotations());
+        }
+
+        function showAnnotationsData() {
+          var annotations = anno.getAnnotations();
+          var data = "\nTags:\n";
+
+          for(var i = 0; i < annotations.length; i++) 
+            data += annotations[i].text + "\n";
+
+          data += "\nNewer Tags:\n";
+          for(var i = 0; i < tagstore.length; i++) {
+            for(var j = 0; j < tagstore[i].length; j++) {
+              data += (tagstore[i][j].innerHTML == "") ? "" : tagstore[i][j].innerHTML;
+            }
+          }
+
+          data += "\nComments:\n";
+
+
+          return data;
+        }
+
+        function addAllAnnotations() {
+          showGroupAnnotations(group1,"g1");
+          showGroupAnnotations(group2,"g2");
+          showGroupAnnotations(group3,"g3");
+          showGroupAnnotations(group4,"g4");
+        }
+
+        function removeAllAnnotations(a) {
+          for(var x = 0; x < a.length; x++) anno.removeAnnotation(a[x]);//alert(JSON.stringify(a[x]));//anno.removeAnnotation(a[x]);
+        }
+
+        function addAllAnnotationsGroup(a) {
+          for(var x = 0; x < a.length; x++) anno.addAnnotation(a[x]);
+        }
+
+        function showGroupAnnotations(a,b) {
+          if(!document.getElementById(b).checked) removeAllAnnotations(a);
+          else if(document.getElementById(b).checked) addAllAnnotationsGroup(a);
+        }    
+
+        anno.addHandler('onAnnotationCreated', function(annotation) {setDiv();});
+        anno.addHandler('onAnnotationRemoved', function(annotation) {setDiv();});
+        anno.addHandler('onAnnotationUpdated', function(annotation) {setDiv();});
+
+        //different tag colours
+
+        var ann = new Annotator(document.getElementById("annotate"));
+    </script>
+
+</html>

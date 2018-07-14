@@ -1,0 +1,38 @@
+mongod —dbpath D:\data
+
+"C:\Program Files\MongoDB\Server\3.6\bin\mongod.exe"
+
+C:\Program Files\MongoDB\Server\3.6\bin
+
+npm install mongoose --save
+git clone <link>
+
+mongod
+mongo
+
+npm init --yes
+npm install mongoose --save
+
+60g, 27g
+280c, 250c
+
+robo3t
+studio 3t
+
+annotion.findall .. group find with mongoose
+
+app.get('/api', function(req, res) {
+	console.log('GET request');
+	res.send({name : 'Yoshi'});
+});
+
+body-parser
+
+C:\Users\manul>http-server C:\Users\manul\Desktop\project
+
+python -m http.server
+server start
+method... then route then function
+
+npm install nodemon --save-dev // runs constant
+nodemon index
