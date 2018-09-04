@@ -32,5 +32,5 @@ mat_dim <- define_transition(
           0.20, 0.12, 0.00, 0.03, 0.00, 0.04, 0.18, 0.14, 0.00, 0.00, 0.00, 0.13, 0.02, 0.07, 
           0.40, 0.22, 0.00, 0.00, 0.00, 0.26, 0.03, 0.05, 0.09, 0.00, 0.00, 0.00, 0.05, 0.04);
 
-# plotting transition matrix
+#plotting transition matrix
 plot(mat_dim)
