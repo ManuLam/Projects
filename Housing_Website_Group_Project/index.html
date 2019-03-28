@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="style4.css">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+  <header style="width:100%">
+
+    <title>Title</title>
+
+    <div style="padding-left: 0px; padding-right: 0px;">
+     
+    <nav class="navbar navbar-expand-lg navbar-light bg-info" style="width:100%; clear: both; margin-bottom: 0px;">
+     
+      <a class="navbar-brand text-light" href="profile.html">Profile Account</a>
+
+      
+      <img src="adorable-animal-breed-356378.jpg" class="img-fluid" alt="Responsive image" style="width: 50px; height: 50px;">
+      
+
+    <div id="welcome" style="padding-left:50px; padding-right: 50px"></div>
+    <button id="btnLogout" class="btn btn-outline-warning my-2 my-sm-0" type="submit">Log Out</button>
+    <div id="bar">
+      <a id="aLogin" href="login.html">Login</a>
+
+    </div>
+    </nav>
+
+
+     
+    </div>
+
+
+</header>
+
+<body>
+
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            
+            <div class="sidebar-header">
+                <h3>Homepage</h3>
+                <strong><i class="fas fa-home"></i></strong>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-eye-slash"></i>
+                        Hide Options
+                    </a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">            
+                    </ul>
+                </li>
+
+
+      <li>
+            <a href="#listByPrice" onclick="listByPrice()" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-dollar-sign"></i>
+                List by Price
+            </a>
+      </li>
+
+      <li>
+            <a href="#listByAvailability" onclick="listByAvailability()" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-cog"></i>
+                List by Available Rooms
+            </a>
+      </li>
+
+      <li>
+            <a href="#Reset Options" onclick="window.location.reload()" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-redo-alt"></i>
+                Reset Options
+            </a>
+      </li>
+
+      <li>
+            <a id="submitbtn" href="#submitbtn" onclick="checkCheckboxs()" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-check"></i>
+                Submit
+            </a>
+      </li>
+                
+    </li>
+
+
+    <li>
+        <a href="#">
+            <i class="fas fa-paper-plane"></i>
+            Contact
+        </a>
+    </li>
+</ul>
+</nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                         <i class="fas fa-angle-double-left"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Cake</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Drake</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Lake</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Rye</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+          <div id="container" style="padding-top: 0px;">
+            <div id="body-content">
+              <div id="buildingList" style="text-align:center">
+                      
+              </div>
+              <div id="roomList">
+
+              </div>
+            </div>  
+          </div>
+    </div>
+</div>
+
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+    <script src="app8.js"></script>
+
+</body>
+</html>
