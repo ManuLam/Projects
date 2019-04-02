@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Order</title>
+        <link rel="stylesheet" href="test.css">
+	</head>
+<body>
+	<div id="container" style="height: 0; width: 60% ; margin: auto; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+	    <b id="timer">
+	    	Your appointment was accepted! Please finish your payment within
+            <span id="minuteNode"></span><span id="secondNode"></span> mintes!
+	    </b>
+        <button onclick="clearSet()">Stop</button>
+        <br><b id="note"></b>
+	</div>
+    <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+    <script src="order.js"></script>
+</body>
+</html>
