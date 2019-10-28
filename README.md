@@ -1,4 +1,5 @@
 # Projects
-Takes time to make good software
+- Jigsaw Solver
+- Sudoku Solver
 
 This is my folder where I upload my projects that I have done over the years.
