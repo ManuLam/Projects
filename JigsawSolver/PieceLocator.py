@@ -235,7 +235,6 @@ def piece_finder_with_swirl(path, image, slice_dir, diff=0.2):
 
         except:
             print('Cannot find image {}'.format(img_slice_full_path))
-            raise
 
 
 def return_spiral_matrix(dimensional_list):
