@@ -3,7 +3,7 @@ import numpy as np
 
 from JigsawSolver.test_code.EdgeProcessing.global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
     CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, FULL_JIGSAW_IMAGE, FULL_IMAGE_CANNY_JIGSAW_PATH, \
-    FULL_IMAGE_CANNY_JIGASW_PIECE
+    FULL_IMAGE_CANNY_JIGASW_PIECE, JUNK_PIECES, FILTERED_JUNK_PATH
 
 crop_rect_dict = {}
 crop_shape_dict = {}
@@ -28,6 +28,18 @@ def dynamic():
 '''
 
 
+# Filter jigsaw pieces smaller than 15 pixels
+def filter_image(img):
+    if len(img.shape) == 3:
+        img_w,img_h,_ = img.shape
+    else:
+        img_w,img_h = img.shape
+
+    if img_w > 15 and img_h > 15:
+        return 1
+    else:
+        return 0
+
 def static_crop_shape(pic, crop_out=False, save=True):
     # load image
     img = cv2.imread(pic)
@@ -45,6 +57,8 @@ def static_crop_shape(pic, crop_out=False, save=True):
 
     kernel = np.ones((3,3), np.uint8)
     dilate = cv2.dilate(canny, kernel, iterations=1)
+
+    cv2.imwrite("CANNY_"+FULL_JIGSAW_IMAGE, dilate)
 
     # Find contours
     # Tested with [CHAIN_APPROX_SIMPLE, CHAIN_APPROX_NONE, CHAIN_APPROX_TC89_L1, CHAIN_APPROX_TC89_KCOS]
@@ -67,13 +81,22 @@ def static_crop_shape(pic, crop_out=False, save=True):
         rsz_img = cv2.drawContours(rsz_img, [approx], 0, (0,255,0), 2)
 
         if crop_out:
+            # Extract out the object and place into JIGSAW_PIECES
             ROI = original[y:y+h, x:x+w]
-            crop_shape_dict[NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(image_number)] = ROI
+            if filter_image(ROI):
+                crop_shape_dict[NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(image_number)] = ROI
+                image_number += 1
+            else:
+                crop_shape_dict[FILTERED_JUNK_PATH + JUNK_PIECES.format(image_number)] = ROI
 
+    image_number = 0
+    if crop_out:
+        for i in range(len(cnts)):
             mask = np.zeros_like(img2) # Create mask where white is what we want, black otherwise
-            cv2.drawContours(mask, cnts, image_number, 255, 0) # Draw filled contour in mask
+            cv2.drawContours(mask, cnts, i, 255, 0) # Draw filled contour in mask
 
-            out = np.zeros_like(img2) # Extract out the object and place into output image
+            # Extract out the object and place into CANNY_JIGSAW
+            out = np.zeros_like(img2)
             out[mask == 255] = img2[mask == 255]
 
             # Now crop
@@ -82,19 +105,23 @@ def static_crop_shape(pic, crop_out=False, save=True):
             (bottomy, bottomx) = (np.max(y), np.max(x))
             out = out[max(0, topy-5): min(width, bottomy+5), max(0, topx-5): min(height, bottomx+5)]
 
-            crop_shape_dict[CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)] = out
+            if filter_image(out):
+                crop_shape_dict[CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)] = out
 
-            out = np.zeros_like(img2) # Extract out the object and place into output image
-            out[mask == 255] = img2[mask == 255]
+                # Extract out the object and place into FULL_IMAGE_CANNY_JIGSAW
+                out = np.zeros_like(img2)
+                out[mask == 255] = img2[mask == 255]
 
-            (y, x) = np.where(mask == 0) # Mask == 0 for entire image, 255 for crop
-            (topy, topx) = (np.min(y), np.min(x))
-            (bottomy, bottomx) = (np.max(y), np.max(x))
-            out = out[topy:bottomy+1, topx:bottomx+1]
+                # Now crop
+                (y, x) = np.where(mask == 0) # Mask == 0 for entire image, 255 for crop
+                (topy, topx) = (np.min(y), np.min(x))
+                (bottomy, bottomx) = (np.max(y), np.max(x))
+                out = out[topy:bottomy+1, topx:bottomx+1]
 
-            crop_shape_dict[FULL_IMAGE_CANNY_JIGSAW_PATH + FULL_IMAGE_CANNY_JIGASW_PIECE.format(image_number)] = out
+                crop_shape_dict[FULL_IMAGE_CANNY_JIGSAW_PATH + FULL_IMAGE_CANNY_JIGASW_PIECE.format(image_number)] = out
 
-            image_number += 1
+                image_number += 1
+
 
     if save:
         for crop in crop_shape_dict:
@@ -105,9 +132,4 @@ def static_crop_shape(pic, crop_out=False, save=True):
     cv2.waitKey(0)
 
 
-def filter_jigsaw_array(a):
-    return a
-
-
 static_crop_shape(FULL_JIGSAW_IMAGE, crop_out=True, save=True)
-#static_crop_shape(FULL_JIGSAW_IMAGE, crop_out=False, save=False)
