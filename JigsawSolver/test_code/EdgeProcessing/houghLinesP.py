@@ -2,7 +2,6 @@ import logging
 
 import cv2
 import numpy as np
-import ColoredFormatter
 
 from JigsawSolver.test_code.EdgeProcessing.global_config import FULL_JIGSAW_IMAGE, HOUGHP_PIECES, HOUGHP_PIECES_PATH, \
     HOUGHP_NON_SIDE_PIECES_PATH, HOUGHP_SIDE_PIECES_PATH, ROTATED_PIECES_PATH, ROTATED_PIECES, JIGSAW_PIECES_COUNT
@@ -59,9 +58,3 @@ def locate_full_canny_straight_sides(filename_list):
 
 def locate_inner_outter_piece():
     1
-
-# Apply HoughLines P onto each Rotated Jigsaw piece to find side edges
-locate_straight_sides([ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])
-
-# Apply HoughLines P onto Entire canny edged image
-# locate_full_canny_straight_sides([FULL_IMAGE_CANNY_JIGSAW_PATH + FULL_IMAGE_CANNY_JIGASW_PIECE.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])

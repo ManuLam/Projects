@@ -4,7 +4,6 @@ import logging
 
 import cv2
 import numpy as np
-import ColoredFormatter
 
 from scipy.stats import norm
 from scipy.spatial.distance import cdist
@@ -243,5 +242,3 @@ def get_best_fitting_rect_coords(xy, d_threshold=30, perp_angle_thresh=20, verbo
     best_fitting_idxs = possible_rectangles[np.argmax(scores)]
     return xy[best_fitting_idxs]
 
-
-harris_corner_with_rotation()

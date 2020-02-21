@@ -3,7 +3,6 @@ import logging
 import cv2
 import numpy as np
 
-import ColoredFormatter
 from JigsawSolver.test_code.EdgeProcessing.global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
     CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, FULL_JIGSAW_IMAGE, FULL_IMAGE_CANNY_JIGSAW_PATH, \
     FULL_IMAGE_CANNY_JIGASW_PIECE, JUNK_PIECES, FILTERED_JUNK_PATH
@@ -122,6 +121,3 @@ def crop_jigsaw_pieces_from_image(pic, crop_out=False, save=True):
     cv2.imshow('canny', canny)
     cv2.imshow('image', rsz_img)
     cv2.waitKey(0)
-
-
-crop_jigsaw_pieces_from_image(FULL_JIGSAW_IMAGE, crop_out=True, save=True)
