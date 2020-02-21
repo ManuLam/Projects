@@ -1,31 +1,17 @@
+import logging
+
 import cv2
 import numpy as np
 
+import ColoredFormatter
 from JigsawSolver.test_code.EdgeProcessing.global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
     CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, FULL_JIGSAW_IMAGE, FULL_IMAGE_CANNY_JIGSAW_PATH, \
     FULL_IMAGE_CANNY_JIGASW_PIECE, JUNK_PIECES, FILTERED_JUNK_PATH
 
 crop_rect_dict = {}
 crop_shape_dict = {}
-'''
 
-# Todo
-# Real time camera, add a capture every few frames
-def dynamic():
-    cap = cv2.VideoCapture(0)
-    camera = 'dynamic.jpg'
-
-    while 1:
-        # Capture frame-by-frames
-        ret, frame = cap.read()
-
-        cv2.imwrite(camera, frame)  # save image
-        img = cv2.imread(camera, 0)
-        edges = cv2.Canny(img, 100, 200)
-
-        cv2.imshow('test', edges)
-        cv2.waitKey(1)
-'''
+logger = logging.getLogger(__name__)
 
 
 # Filter jigsaw pieces smaller than 15 pixels
@@ -40,7 +26,11 @@ def filter_image(img):
     else:
         return 0
 
-def static_crop_shape(pic, crop_out=False, save=True):
+
+# Crop out an entire image by each Jigsaw Piece
+# Provides Canny Edged output and Normal output
+# Also filters out junk pieces
+def crop_jigsaw_pieces_from_image(pic, crop_out=False, save=True):
     # load image
     img = cv2.imread(pic)
     rsz_img = cv2.resize(img, None, fx=0.80, fy=0.80) # resize since image is huge
@@ -49,7 +39,7 @@ def static_crop_shape(pic, crop_out=False, save=True):
     original = rsz_img.copy()
     gray = cv2.cvtColor(rsz_img, cv2.COLOR_BGR2GRAY)
 
-    # Gaussian vs Median... Median wins for edges
+    # Gaussian vs Median... Median wins for straight edges
     # Blurring with gaussian for better contours
     # blurred = cv2.GaussianBlur(gray, (3, 3), 0)
     blurred = cv2.medianBlur(gray, ksize=3)
@@ -122,14 +112,16 @@ def static_crop_shape(pic, crop_out=False, save=True):
 
                 image_number += 1
 
-
     if save:
         for crop in crop_shape_dict:
             cv2.imwrite(crop, crop_shape_dict[crop])
+
+        logger.info(' %s Successfully split into folders: %s | %s | %s | %s', pic, NORMAL_JIGSAW_PATH,
+                    FILTERED_JUNK_PATH, CANNY_JIGSAW_PATH, FULL_IMAGE_CANNY_JIGSAW_PATH)
 
     cv2.imshow('canny', canny)
     cv2.imshow('image', rsz_img)
     cv2.waitKey(0)
 
 
-static_crop_shape(FULL_JIGSAW_IMAGE, crop_out=True, save=True)
+crop_jigsaw_pieces_from_image(FULL_JIGSAW_IMAGE, crop_out=True, save=True)
