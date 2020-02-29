@@ -1,20 +1,24 @@
 # Apply Harris Corner Algorithm to find maximum rectangle
 # Then apply a rotation to the piece, parallel to our wanted plane
 import logging
+import math
 
 import cv2
 import numpy as np
-
+import operator
+from functools import reduce
 from scipy.stats import norm
 from scipy.spatial.distance import cdist
 from JigsawSolver.test_code.EdgeProcessing.global_config import CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, \
-    JIGSAW_PIECES_COUNT, ROTATED_PIECES_PATH, ROTATED_PIECES, HARRIS_PIECES_PATH, HARRIS_PIECES
+    JIGSAW_PIECES_COUNT, ROTATED_PIECES_PATH, ROTATED_PIECES, HARRIS_PIECES_PATH, HARRIS_PIECES, \
+    CLASSIFICATION_PATH, CLASSIFICATION_PIECE, ENRICHED_PIECES_PATH, ENRICHED_PIECE
+from compute_sides import draw_lines_from_corner, compute_lines_param, classify_jigsaw_edges
 
 logger = logging.getLogger(__name__)
 
 
 # Rotates an image relative to degrees passed
-def rotate(image, degrees):
+def rotate_image(image, degrees):
     if len(image.shape) == 3:
         rows, cols, _ = image.shape
     else:
@@ -25,15 +29,24 @@ def rotate(image, degrees):
     return cv2.warpAffine(image, M, (cols, rows)), M
 
 
+# Takes in a list of points and sorts it in a clockwise order
+def sort_points_clockwise(pts):
+    center = tuple(map(operator.truediv, reduce(lambda x, y: map(operator.add, x, y), pts), [len(pts)] * 2))
+    return sorted(pts, key=lambda coord: (-135 - math.degrees(math.atan2(*tuple(map(operator.sub, coord, center))[::-1]))) % 360)
+
+
 # Find the Corner points per Jigsaw piece, Rotate the image and store the rotated value
 def harris_corner_with_rotation():
     for image_number in range(0, JIGSAW_PIECES_COUNT):
         filename = CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)
 
         try:
-            ori_image = cv2.imread(filename)
-            img = cv2.imread(filename)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            harris_img = cv2.imread(filename)
+            rotated_harris_image = cv2.imread(filename)
+            rotated_classifer_img = cv2.imread(filename)
+            rotated_img = cv2.imread(filename)
+
+            gray = cv2.cvtColor(harris_img, cv2.COLOR_BGR2GRAY)
             gray = np.float32(gray)
             dst = cv2.cornerHarris(gray, 4, 3, 0.04)
 
@@ -42,7 +55,7 @@ def harris_corner_with_rotation():
 
             # Threshold for an optimal value, it may vary depending on the image.
             dst_threshold = 0.20
-            img[dst > dst_threshold * dst.max()] = [0, 0, 255]
+            harris_img[dst > dst_threshold * dst.max()] = [0, 0, 255]
 
             ret, dst = cv2.threshold(dst, dst_threshold * dst.max(), 255, 0)
             dst = np.uint8(dst)
@@ -57,32 +70,60 @@ def harris_corner_with_rotation():
                 if intersections[1, 0] == intersections[0, 0]:
                     rotation_angle = 90
                 else:
-                    rotation_angle = np.arctan2(intersections[1, 1] - intersections[0, 1],
-                                                intersections[1, 0] - intersections[0, 0]) * 180 / np.pi
+                    rotation_angle = np.arctan2(intersections[1, 1] - intersections[0, 1], intersections[1, 0] - intersections[0, 0]) * 180 / np.pi
 
-                for x,y in intersections:
-                    ori_image[int(y)-3:int(y)+3,int(x)-3:int(x)+3] = (0,255,0)
+                corners = []
+                # Marking the 4 best corners, also giving each corner a thicker green pixel
+                for x, y in intersections:
+                    rotated_harris_image[int(y)-2:int(y)+2, int(x)-2:int(x)+2] = (0, 255, 0)
+                    corners.append([int(x), int(y)])
 
-                # Rotate jigsaw image
-                rotated_gray, M = rotate(img, rotation_angle)
-                rotated_gray2, M2 = rotate(ori_image, rotation_angle)
+                # To Avoid diagonal matching, we sort the corners
+                corners = sort_points_clockwise(corners)
+                draw_lines_from_corner(rotated_classifer_img, corners)
+
+                # Rotate jigsaw images by rotation_angle
+                rotated_gray1, M1 = rotate_image(harris_img, rotation_angle)
+                rotated_gray2, M2 = rotate_image(rotated_harris_image, rotation_angle)
+                rotated_gray3, M3 = rotate_image(rotated_classifer_img, rotation_angle)
+
+                # Extract edges and define them as In or Out, must rotate corner points
+                rotated_gray4, M4 = rotate_image(rotated_img, rotation_angle)
+                rotated_corners = np.array(np.round([M3.dot((point[0], point[1], 1)) for point in corners])).astype(np.int)
+                print(corners)
+                print(rotated_corners)
+
+
+                image_classifier = classify_jigsaw_edges(rotated_harris_image,  rotated_corners)
+                #image_classifier[np.where((image_classifier==1))] = (0,255,0)
+
+                #cv2.imshow('clas2', image_classifier)
+                #cv2.waitKey(0)
+
+                ####################
 
                 logger.info("%s rotated by %d degrees", filename, rotation_angle)
 
-
             except:
+                raise
                 logger.info("No points found for: ", filename)
                 pass
 
-            cv2.imwrite(HARRIS_PIECES_PATH + HARRIS_PIECES.format(image_number), img)
-
+            cv2.imwrite(HARRIS_PIECES_PATH + HARRIS_PIECES.format(image_number), harris_img)
             cv2.imwrite(ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number), rotated_gray2)
-            cv2.imshow('piece1', img)
+            cv2.imwrite(ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number), rotated_gray2)
+            cv2.imwrite(CLASSIFICATION_PATH + CLASSIFICATION_PIECE.format(image_number), rotated_gray3)
+            cv2.imwrite(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number), image_classifier)
+
+            cv2.imshow('piece1', harris_img)
+            cv2.imshow('piece3', rotated_gray1)
             cv2.imshow('piece2', rotated_gray2)
-            cv2.imshow('piece3', rotated_gray)
+            cv2.imshow('piece4', rotated_gray3)
+
             cv2.waitKey(0)
 
         except:
+            raise
             logger.info('No corners found for: ', filename, )
 
 
@@ -157,7 +198,6 @@ def get_best_fitting_rect_coords(xy, d_threshold=30, perp_angle_thresh=20, verbo
 
             return
 
-
         last_angle = angles[idx, prev_points[-1]]
         perp_angle = last_angle - 90
         if perp_angle < 0:
@@ -175,7 +215,7 @@ def get_best_fitting_rect_coords(xy, d_threshold=30, perp_angle_thresh=20, verbo
             diff_to_explore = np.nonzero(np.logical_and(all_diffs, distances[idx] > 0))[0]
 
             for dte_idx in diff_to_explore:
-                if dte_idx not in prev_points: # unlickly to happen but just to be certain
+                if dte_idx not in prev_points: # unlikely to happen but just to be certain
                     next_points = prev_points[::]
                     next_points.append(idx)
 
@@ -243,4 +283,7 @@ def get_best_fitting_rect_coords(xy, d_threshold=30, perp_angle_thresh=20, verbo
 
     scores = areas * norm(0, 150).pdf(rectangularness)
     best_fitting_idxs = possible_rectangles[np.argmax(scores)]
+
     return xy[best_fitting_idxs]
+
+harris_corner_with_rotation()
