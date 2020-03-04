@@ -25,8 +25,8 @@ HOUGHP_SIDE_PIECES_PATH = 'side/'
 HOUGHP_NON_SIDE_PIECES_PATH = 'non_side/'
 HOUGHP_PIECES = 'hough_pieces_{}.png'
 
-CLASSIFICATION_PATH ='class/'
-CLASSIFICATION_PIECE = 'class_pieces_{}.png'
+CLASSIFICATION_PATH = 'classifier/'
+CLASSIFICATION_PIECE = 'classifier_pieces_{}.png'
 
 ENRICHED_PIECES_PATH = 'enriched_pieces/'
 ENRICHED_PIECE = 'enriched_pieces_{}.png'

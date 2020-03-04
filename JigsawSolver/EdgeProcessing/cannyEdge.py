@@ -3,7 +3,7 @@ import logging
 import cv2
 import numpy as np
 
-from JigsawSolver.test_code.EdgeProcessing.global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
+from global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
     CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, FULL_JIGSAW_IMAGE, FULL_IMAGE_CANNY_JIGSAW_PATH, \
     FULL_IMAGE_CANNY_JIGASW_PIECE, JUNK_PIECES, FILTERED_JUNK_PATH
 
