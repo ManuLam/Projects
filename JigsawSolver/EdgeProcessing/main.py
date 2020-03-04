@@ -5,7 +5,7 @@ from cannyEdge import crop_jigsaw_pieces_from_image
 from global_config import FULL_JIGSAW_IMAGE, ROTATED_PIECES_PATH, ROTATED_PIECES, JIGSAW_PIECES_COUNT, \
     FULL_IMAGE_CANNY_JIGSAW_PATH, FULL_IMAGE_CANNY_JIGASW_PIECE
 from harrisCorner import harris_corner_with_rotation
-from houghLinesP import locate_straight_sides, locate_full_canny_straight_sides
+from houghLinesP import locate_straight_sides_list, locate_full_canny_straight_sides
 from PyQt5.QtWidgets import QApplication, QPushButton, QWidget
 
 
@@ -49,7 +49,7 @@ class Button(QWidget):
     # Apply HoughLines P onto each Rotated Jigsaw piece to find side edges
     @staticmethod
     def locate_straight_sides():
-        locate_straight_sides([ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])
+        locate_straight_sides_list([ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])
 
     # Apply HoughLines P onto Entire canny edged image
     @staticmethod
