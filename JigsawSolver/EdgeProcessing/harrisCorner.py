@@ -95,9 +95,6 @@ def harris_corner_with_rotation():
                 rotated_corners = np.array(np.round([M3.dot((point[0], point[1], 1)) for point in corners])).astype(np.int)  # Rotate corner points
 
                 image_classifier = classify_jigsaw_edges(rotated_gray4, rotated_corners)  # Classify jigsaw edges to 4 sides
-
-                cv2.imshow('classifier', image_classifier)
-
                 ####################
 
                 logger.info("%s rotated by %d degrees", filename, rotation_angle)
@@ -112,7 +109,11 @@ def harris_corner_with_rotation():
             cv2.imwrite(CLASSIFICATION_PATH + CLASSIFICATION_PIECE.format(image_number), rotated_gray3)
             cv2.imwrite(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number), image_classifier)
 
-            new_jigsaw_piece = JigsawPiece(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number), rotation_angle, compute_lines_params(rotated_corners))
+            # Create a jigsaw piece object that can later be used for solving the puzzle
+            new_jigsaw_piece = JigsawPiece(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number),
+                                           rotation_angle,
+                                           compute_lines_params(rotated_corners),
+                                           find_centroid(rotated_corners))
             jigsaw_pieces.append(new_jigsaw_piece)
 
             cv2.imshow('piece1', harris_img)
@@ -123,7 +124,14 @@ def harris_corner_with_rotation():
             cv2.waitKey(0)
 
         except:
+            raise
             logger.info('No corners found for: ', filename, )
+
+
+def find_centroid(pts):
+    x = [p[0] for p in pts]
+    y = [p[1] for p in pts]
+    return sum(x) / len(pts), sum(y) / len(pts)
 
 
 def find_points(dst, gray):

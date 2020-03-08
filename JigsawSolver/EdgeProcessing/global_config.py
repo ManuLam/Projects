@@ -34,6 +34,8 @@ ENRICHED_PIECE = 'enriched_pieces_{}.png'
 JIGSAW_PIECES_COUNT = 11
 SIDE_PIECES_BOX = []
 
+colours = {'AQUA': (255, 255, 0), 'GREEN': (0, 255, 0), 'BLUE': (255, 0, 0), 'RED': (0, 0, 255)}
+
 
 def setup(folder_names):
     for folder in folder_names:
