@@ -38,7 +38,7 @@ def sort_points_clockwise(pts):
 
 jigsaw_pieces = []
 # Find the Corner points per Jigsaw piece, Rotate the image and store the rotated value
-def harris_corner_with_rotation():
+def harris_corner_with_rotation(show=True):
     for image_number in range(0, JIGSAW_PIECES_COUNT):
         filename = CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)
 
@@ -116,12 +116,13 @@ def harris_corner_with_rotation():
                                            find_centroid(rotated_corners))
             jigsaw_pieces.append(new_jigsaw_piece)
 
-            cv2.imshow('piece1', harris_img)
-            cv2.imshow('piece3', rotated_gray1)
-            cv2.imshow('piece2', rotated_gray2)
-            cv2.imshow('piece4', rotated_gray3)
+            if show:
+                cv2.imshow('piece1', harris_img)
+                cv2.imshow('piece3', rotated_gray1)
+                cv2.imshow('piece2', rotated_gray2)
+                cv2.imshow('piece4', rotated_gray3)
 
-            cv2.waitKey(0)
+                cv2.waitKey(0)
 
         except:
             raise

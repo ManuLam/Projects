@@ -21,24 +21,24 @@ class JigsawPiece:
     # If side piece, no need to match to another
     # Inner looks for Outers, Outers look for Inners
 
-    def __init__(self, enriched_image_file, rotation_angle=None, line_params=None, centroid=None, show=True):
+    def __init__(self, enriched_image_file, rotation_angle=None, line_params=None, centroid=None, show_enriched=False, show_sides=False):
         self.image_file = enriched_image_file  # 'enriched_pieces/enriched_pieces_0.png'
         self.rotation = rotation_angle
         self.centroid = centroid
 
         self.bSide = dict(pixels=None, edge_type=None, line_param=line_params[0])
-        self.lSide = {'pixels': None, 'edge_type': None, 'line_param': line_params[1]}  # Inner/Outer/Straight
+        self.lSide = {'pixels': None, 'edge_type': None, 'line_param': line_params[1]}
         self.rSide = {'pixels': None, 'edge_type': None, 'line_param': line_params[2]}
         self.tSide = dict(pixels=None, edge_type=None, line_param=line_params[3])
 
         # Extract 4 sides from colour of image
         self.bSide['pixels'] = self.extract_where_colour(colours['AQUA'])  # AQUA
-        self.lSide['pixels'] = self.extract_where_colour(colours['GREEN'])  # GREEN / Inner / Outer / Straight / Pixels
+        self.lSide['pixels'] = self.extract_where_colour(colours['GREEN'])  # GREEN
         self.rSide['pixels'] = self.extract_where_colour(colours['BLUE'])  # BLUE
         self.tSide['pixels'] = self.extract_where_colour(colours['RED'])  # RED
 
         for side in [self.bSide, self.lSide, self.rSide, self.tSide]:
-            straight_side_located = locate_straight_side_img(side['pixels'], show=True)  # 0 or 1
+            straight_side_located = locate_straight_side_img(side['pixels'], show=False)  # 0 or 1
             self.STRAIGHT_SIDE_COUNT += straight_side_located
             print("Total amount of sides located : {}".format(straight_side_located))
 
@@ -50,8 +50,10 @@ class JigsawPiece:
 
         print("Amount of Straight edges in image: {}".format(self.STRAIGHT_SIDE_COUNT))
 
-        if show:
+        if show_enriched:
             cv2.imshow('Jigsaw Piece Enriched', cv2.imread(self.image_file))
+
+        if show_sides:
             cv2.imshow('Bottom side', self.bSide['pixels'])
             cv2.imshow('Left side', self.lSide['pixels'])
             cv2.imshow('Right side', self.rSide['pixels'])
@@ -63,6 +65,9 @@ class JigsawPiece:
         mask = cv2.inRange(img, colour, colour)
 
         return mask
+
+    def get_sides(self):
+        return [self.bSide, self.lSide, self.rSide, self.tSide]
 
     def print_side_info(self):
         print('Bottom side is a {}'.format(self.bSide['edge_type']))
@@ -79,4 +84,4 @@ class JigsawPiece:
         centroid_distance = point_to_line_dist(cx1, cy1, line_param)
         sign = centroid_distance * np.mean(distances)  # Centroid distance prevents the signs from flipping
 
-        return 'in' if sign > 0 else 'out'
+        return 'IN' if sign > 0 else 'OUT'

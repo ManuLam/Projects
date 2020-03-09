@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 from global_config import colours
 
-corner_index_pairs = {'BOT': (0, 1), 'LEFT': (0, 3), 'RIGHT': (1, 2), 'TOP': (2, 3), }  # Order we will create/match lines
-colour_array = [colours['AQUA'], colours['GREEN'], colours['BLUE'], colours['RED']]  # Colours in this order L/R/T/B
+corner_index_pairs = {'BOT': (0, 1), 'LEFT': (0, 3), 'RIGHT': (1, 2), 'TOP': (2, 3)}  # Order we will create/match lines
+colour_array = [colours['AQUA'], colours['GREEN'], colours['BLUE'], colours['RED']]  # Colours in this order B/L/R/T
 
 
 def draw_lines_from_corner(img, pts):
