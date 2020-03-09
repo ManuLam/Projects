@@ -26,10 +26,10 @@ class JigsawPiece:
         self.rotation = rotation_angle
         self.centroid = centroid
 
-        self.bSide = dict(pixels=None, edge_type=None, line_param=line_params[0])
-        self.lSide = {'pixels': None, 'edge_type': None, 'line_param': line_params[1]}
-        self.rSide = {'pixels': None, 'edge_type': None, 'line_param': line_params[2]}
-        self.tSide = dict(pixels=None, edge_type=None, line_param=line_params[3])
+        self.bSide = dict(side='BOT', pixels=None, edge_type=None, line_param=line_params[0])
+        self.lSide = {'side': 'LEFT', 'pixels': None, 'edge_type': None, 'line_param': line_params[1]}
+        self.rSide = {'side': 'RIGHT', 'pixels': None, 'edge_type': None, 'line_param': line_params[2]}
+        self.tSide = dict(side='TOP', pixels=None, edge_type=None, line_param=line_params[3])
 
         # Extract 4 sides from colour of image
         self.bSide['pixels'] = self.extract_where_colour(colours['AQUA'])  # AQUA
@@ -66,8 +66,21 @@ class JigsawPiece:
 
         return mask
 
+    def get_side(self, side):
+        if side == 'BOT':
+            return self.bSide
+        elif side == 'LEFT':
+            return self.lSide
+        elif side == 'RIGHT':
+            return self.rSide
+        elif side == 'TOP':
+            return self.tSide
+
     def get_sides(self):
         return [self.bSide, self.lSide, self.rSide, self.tSide]
+
+    def get_corner_tuple(self):
+        return tuple([side['side'] for side in self.get_sides() if side['edge_type'] == 'FLAT'])
 
     def print_side_info(self):
         print('Bottom side is a {}'.format(self.bSide['edge_type']))
