@@ -38,24 +38,14 @@ def template_piece_swapper():
     1
 
 
+# merges all progress stages into one png image
+def progress_merger():
+    1
+
 # Enhances customer experience from knowing which piece is which during solving steps
 def piece_labeler():
     1
 
-
-N = 4
-
-pieces = [ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
-pieces2 = [NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
-
-max_w, max_h = find_max_edge_size(pieces)
-
-seperated_pieces = [pieces[i:i + N-1] for i in range(0, len(pieces), N-1)]
-seperated_pieces2 = [pieces2[i:i + N-1] for i in range(0, len(pieces2), N-1)]
-
-
-# Piece location, array of pieces or dictionary
-piece_locations = [[1 for _ in range(N)] for _ in range(N)]
-
-template_maker(N, max_w, max_h, seperated_pieces, 'canvas.png')
-template_maker(N, max_w, max_h, seperated_pieces2, 'canvas2.png')
+# Returns a N*N sized list
+def n_piece_splitter(N, pieces):
+    return [pieces[i:i + N-1] for i in range(0, len(pieces), N-1)]

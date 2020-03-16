@@ -7,16 +7,13 @@ from PIL import Image, ImageDraw
 from JigsawPiece import JigsawPiece
 from global_config import ENRICHED_PIECES_PATH, ENRICHED_PIECE, JIGSAW_PIECES_COUNT, NORMAL_JIGSAW_PATH, \
     NORMAL_JIGASW_PIECE
+from harrisCorner import harris_corner_with_rotation
+from jigsaw_visualizer import find_max_edge_size, n_piece_splitter, template_maker
 
 
 def jisaw_array(Jigsaw_List, show=False):
-    # Format a blank background to fit our pieces
-
-    img = Image.new('RGB', (1200,600), 'black')
-    img.save('canvas.png')
-
-
     corner_pieces = find_corners(Jigsaw_List)
+
     if show:
         for piece in corner_pieces:
                 cv2.imshow('tst', cv2.imread(piece.image_file))
@@ -107,30 +104,29 @@ def comparator(piece, p1, p2, corner_tuple):
 
 N = 4
 placed_array = [0] * N  # 0 | 1
+N = 4
 
-def template_maker():
-    background = Image.new('RGB', (1200, 1000), 'black')
-    background.save('canvas.png')
+pieces = [ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
+pieces2 = [NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
 
-    pieces = [ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
-    # pieces = [NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(i) for i in range(JIGSAW_PIECES_COUNT)]
+max_w, max_h = find_max_edge_size(pieces)
 
-
-    test = [pieces[i:i + 4] for i in range(0, len(pieces), 4)]
-    print(test)
-
-    for i in range(len(test)):
-        for j in range(len(test[i])):
-            img = Image.open(test[i][j])
-            img_w, img_h = img.size
-            background.paste(img, ((img_w + 55)*i, (img_h + 55)*j))
-            background.save('canvas.png')
+seperated_pieces = n_piece_splitter(N, pieces)
+seperated_pieces2 = n_piece_splitter(N, pieces2)
 
 
-# Keeping it simple, side pieces first
-# jigsawList = [JigsawPiece('enriched_pieces/enriched_pieces_{}.png'.format(i)) for i in range(11)]
-# jisaw_array(jigsawList)
+# logic of right side fits = array[r+1][c]
+# logic of left side fits = array[r-1][c]
+# logic of top side fits = array[r][c-1]
+# logic of bot side fits = array[r][c+1]
 
-# Should loop through pieces and print the progress array out
+# Piece location, array of pieces or dictionary
+piece_locations = [[1 for _ in range(N)] for _ in range(N)]
+print(piece_locations)
+template_maker(N, max_w, max_h, seperated_pieces, 'canvas.png')
+template_maker(N, max_w, max_h, seperated_pieces2, 'canvas2.png')
 
-template_maker()
+
+# Template maker, creates a fresh template at the start, then traverses the array to find pieces
+jigsaw_pieces = harris_corner_with_rotation(show=False)
+jisaw_array(jigsaw_pieces)

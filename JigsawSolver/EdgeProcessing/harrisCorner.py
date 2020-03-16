@@ -36,9 +36,10 @@ def sort_points_clockwise(pts):
     return sorted(pts, key=lambda coord: (-135 - math.degrees(math.atan2(*tuple(map(operator.sub, coord, center))[::-1]))) % 360)
 
 
-jigsaw_pieces = []
 # Find the Corner points per Jigsaw piece, Rotate the image and store the rotated value
 def harris_corner_with_rotation(show=True):
+    jigsaw_pieces = []
+
     for image_number in range(0, JIGSAW_PIECES_COUNT):
         filename = CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)
 
@@ -127,6 +128,8 @@ def harris_corner_with_rotation(show=True):
         except:
             raise
             logger.info('No corners found for: ', filename, )
+
+    return jigsaw_pieces
 
 
 def find_centroid(pts):
