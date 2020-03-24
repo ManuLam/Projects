@@ -16,8 +16,8 @@ def jisaw_array(Jigsaw_List, show=False):
 
     if show:
         for piece in corner_pieces:
-                cv2.imshow('tst', cv2.imread(piece.image_file))
-                cv2.waitKey(0)
+            cv2.imshow('tst', cv2.imread(piece.image_file))
+            cv2.waitKey(0)
 
     side_pieces = find_sides(Jigsaw_List)
 
@@ -120,15 +120,16 @@ seperated_pieces2 = n_piece_splitter(N, pieces2)
 # logic of top side fits = array[r][c-1]
 # logic of bot side fits = array[r][c+1]
 
-# Piece location, array of pieces or dictionary
-piece_locations = [[1 for _ in range(N)] for _ in range(N)]
-print(piece_locations)
 
-template_maker(N, max_w, max_h, seperated_pieces, save='canvas.png', show=True)
-template_maker(N, max_w, max_h, seperated_pieces2, save='canvas2.png', show=True)
+# Creates a jigsaw template based on the pieces from 0 -> N size
+template_maker(N, max_w, max_h, seperated_pieces, save='canvas.png', show=False)
+template_maker(N, max_w, max_h, seperated_pieces2, save='canvas2.png', show=False)
 
-template_piece_swapper(N, max_w, max_h, seperated_pieces, 'canvas.png', piece1=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(0), piece2=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(1), show=True)
-template_piece_swapper(N, max_w, max_h, seperated_pieces2, save='canvas2.png', piece1=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(0), piece2=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(1), show=True)
+# Allows us to swap 2 elements and update the jigsaw template
+template_piece_swapper(N, max_w, max_h, seperated_pieces, 'canvas.png', piece1=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(0), piece2=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(1), show=False)
+template_piece_swapper(N, max_w, max_h, seperated_pieces2, save='canvas2.png', piece1=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(5), piece2=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(1), show=False)
+
+# Currently based on DIR of enriched images, will be using returned Harris Corner pieces for our solution
 
 # Template maker, creates a fresh template at the start, then traverses the array to find pieces
 jigsaw_pieces = harris_corner_with_rotation(show=False)

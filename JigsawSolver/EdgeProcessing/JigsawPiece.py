@@ -37,10 +37,12 @@ class JigsawPiece:
         self.rSide['pixels'] = self.extract_where_colour(colours['BLUE'])  # BLUE
         self.tSide['pixels'] = self.extract_where_colour(colours['RED'])  # RED
 
+        print('Jigsaw Piece: {}'.format(self.image_file))
+
         for side in [self.bSide, self.lSide, self.rSide, self.tSide]:
             straight_side_located = locate_straight_side_img(side['pixels'], show=False)  # 0 or 1
             self.STRAIGHT_SIDE_COUNT += straight_side_located
-            print("Total amount of sides located : {}".format(straight_side_located))
+            print("Total amount of sides located on {} side : {}".format(side['side'], straight_side_located))
 
             # Find out if a side is FLAT | INNER | OUTER
             if straight_side_located > 0:
@@ -48,7 +50,7 @@ class JigsawPiece:
             else:
                 side['edge_type'] = self.inner_or_outer(side)
 
-        print("Amount of Straight edges in image: {}".format(self.STRAIGHT_SIDE_COUNT))
+        print("Amount of Straight edges in image: {} \n".format(self.STRAIGHT_SIDE_COUNT))
 
         if show_enriched:
             cv2.imshow('Jigsaw Piece Enriched', cv2.imread(self.image_file))
@@ -83,6 +85,7 @@ class JigsawPiece:
         return tuple([side['side'] for side in self.get_sides() if side['edge_type'] == 'FLAT'])
 
     def print_side_info(self):
+        print('Jigsaw Piece: {}'.format(self.image_file))
         print('Bottom side is a {}'.format(self.bSide['edge_type']))
         print('Left side is a {}'.format(self.lSide['edge_type']))
         print('Right side is a {}'.format(self.rSide['edge_type']))
