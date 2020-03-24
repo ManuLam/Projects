@@ -1,12 +1,9 @@
 import cv2
 from PIL import Image
 
-from global_config import ENRICHED_PIECES_PATH, ENRICHED_PIECE, JIGSAW_PIECES_COUNT, NORMAL_JIGSAW_PATH, \
-    NORMAL_JIGASW_PIECE
-
 
 # Specific location has location in our template
-def template_maker(N, width, height, pieces, save):
+def template_maker(N, width, height, pieces, save=None, show=False):
     background = Image.new('RGB', (N*width, N*height), 'black')
     background.save(save)
     piece_locations = []
@@ -15,10 +12,48 @@ def template_maker(N, width, height, pieces, save):
         for j in range(len(pieces[i])):
             img = Image.open(pieces[i][j])
 
-            background.paste(img, (width*i, height*j))
+            background.paste(img, (width*j, height*i))
             background.save(save)
 
+    if show:
+        background.show()
+
     return piece_locations
+
+
+# Swap two pieces inside a 2D list, pieces=Jigsaw object
+# Make a new image of a "swapped list"
+def template_piece_swapper(N, width, height, pieces, save=None, piece1=None, piece2=None, show=False):
+    # extract piece1, piece2 and swap them
+    # pieces = new pieces
+    print(piece1, piece2)
+    p11,p12 = 0,0
+    p21,p22 = 0,0
+
+    for index in range(len(pieces)):
+
+        try:
+            if pieces[index].index(piece1):
+                p11 = index
+                p12 = pieces[index].index(piece1)
+
+                print("p1 found: ", pieces[index])
+
+        except ValueError:
+            pass
+
+        try:
+            if pieces[index].index(piece2):
+                p21 = index
+                p22 = pieces[index].index(piece2)
+                print("p2 found: ", pieces[index])
+
+        except ValueError:
+            pass
+
+    pieces[p11][p12], pieces[p21][p22] = piece2, piece1
+
+    template_maker(N, width, height, pieces, save=save, show=show)
 
 
 # Find largest width and height of extracted pieces
@@ -31,11 +66,6 @@ def find_max_edge_size(pieces):
         w = max(w, image_w)
 
     return h,w
-
-
-# Swap two pieces inside a list
-def template_piece_swapper():
-    1
 
 
 # merges all progress stages into one png image

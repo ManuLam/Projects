@@ -8,7 +8,7 @@ from JigsawPiece import JigsawPiece
 from global_config import ENRICHED_PIECES_PATH, ENRICHED_PIECE, JIGSAW_PIECES_COUNT, NORMAL_JIGSAW_PATH, \
     NORMAL_JIGASW_PIECE
 from harrisCorner import harris_corner_with_rotation
-from jigsaw_visualizer import find_max_edge_size, n_piece_splitter, template_maker
+from jigsaw_visualizer import find_max_edge_size, n_piece_splitter, template_maker, template_piece_swapper
 
 
 def jisaw_array(Jigsaw_List, show=False):
@@ -123,9 +123,12 @@ seperated_pieces2 = n_piece_splitter(N, pieces2)
 # Piece location, array of pieces or dictionary
 piece_locations = [[1 for _ in range(N)] for _ in range(N)]
 print(piece_locations)
-template_maker(N, max_w, max_h, seperated_pieces, 'canvas.png')
-template_maker(N, max_w, max_h, seperated_pieces2, 'canvas2.png')
 
+template_maker(N, max_w, max_h, seperated_pieces, save='canvas.png', show=True)
+template_maker(N, max_w, max_h, seperated_pieces2, save='canvas2.png', show=True)
+
+template_piece_swapper(N, max_w, max_h, seperated_pieces, 'canvas.png', piece1=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(0), piece2=ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(1), show=True)
+template_piece_swapper(N, max_w, max_h, seperated_pieces2, save='canvas2.png', piece1=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(0), piece2=NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(1), show=True)
 
 # Template maker, creates a fresh template at the start, then traverses the array to find pieces
 jigsaw_pieces = harris_corner_with_rotation(show=False)
