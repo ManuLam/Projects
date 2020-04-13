@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)  # For logging purposes
 
 def locate_straight_sides_list(filename_list, full_display=False, show=False):
     """
-    This function goes through all the files in a list and detects straight lines, writes to the image passed
+    This function goes through all the files in a list and detects straight lines, writes to the files passed
 
     :param filename_list: A list of files that we want to detect lines in
     :param full_display: A boolean that can allow us to write to the Original Full image
