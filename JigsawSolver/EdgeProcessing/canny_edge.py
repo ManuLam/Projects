@@ -3,7 +3,7 @@ import logging
 import cv2
 import numpy as np
 
-from global_config import NORMAL_JIGSAW_PATH, NORMAL_JIGASW_PIECE, \
+from global_config import ORIGINAL_JIGSAW_PATH, ORIGINAL_JIGASW_PIECE, \
     CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, FULL_JIGSAW_IMAGE, FULL_IMAGE_CANNY_JIGSAW_PATH, \
     FULL_IMAGE_CANNY_JIGASW_PIECE, JUNK_PIECES, FILTERED_JUNK_PATH
 
@@ -61,7 +61,6 @@ def crop_jigsaw_pieces_from_image(pic, crop_out=False, save=True):
     img2 = cv2.imread(pic, 0)
     img2 = cv2.resize(img2, None, fx=0.80, fy=0.80) # resize since image is huge
 
-    # https://stackoverflow.com/questions/28759253/how-to-crop-the-internal-area-of-a-contour
     for c in cnts:
         x,y,w,h = cv2.boundingRect(c)
         epsilon = 0.000001 * cv2.arcLength(c, True)
@@ -70,29 +69,31 @@ def crop_jigsaw_pieces_from_image(pic, crop_out=False, save=True):
         rsz_img = cv2.drawContours(rsz_img, [approx], 0, (0,255,0), 2)
 
         if crop_out:
-            # Extract out the object and place into JIGSAW_PIECES
+            # Extract out the Jigsaw piece and place into JIGSAW_PIECES
             ROI = original[y:y+h, x:x+w]
             if filter_image(ROI):
-                crop_shape_dict[NORMAL_JIGSAW_PATH + NORMAL_JIGASW_PIECE.format(image_number)] = ROI
+                crop_shape_dict[ORIGINAL_JIGSAW_PATH + ORIGINAL_JIGASW_PIECE.format(image_number)] = ROI
                 image_number += 1
             else:
                 crop_shape_dict[FILTERED_JUNK_PATH + JUNK_PIECES.format(image_number)] = ROI
 
+    out2 = ROI
     image_number = 0
     if crop_out:
         for i in range(len(cnts)):
-            mask = np.zeros_like(img2) # Create mask where white is what we want, black otherwise
-            cv2.drawContours(mask, cnts, i, 255, 0) # Draw filled contour in mask
+            mask = np.zeros_like(img2)  # Create mask where white is what we want, black otherwise
+            cv2.drawContours(mask, cnts, i, 255, 0)  # Draw filled contour in mask
 
-            # Extract out the object and place into CANNY_JIGSAW
+            # Extract out the Canny Jigsaw piece and place into CANNY_JIGSAW
             out = np.zeros_like(img2)
             out[mask == 255] = img2[mask == 255]
 
-            # Now crop
+            # Now crop out the mask
             (y, x) = np.where(mask == 255)
             (topy, topx) = (np.min(y), np.min(x))
             (bottomy, bottomx) = (np.max(y), np.max(x))
             out = out[max(0, topy-5): min(width, bottomy+5), max(0, topx-5): min(height, bottomx+5)]
+            out2 = out2[max(0, topy-5): min(width, bottomy+5), max(0, topx-5): min(height, bottomx+5)]
 
             if filter_image(out):
                 crop_shape_dict[CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)] = out
@@ -115,7 +116,7 @@ def crop_jigsaw_pieces_from_image(pic, crop_out=False, save=True):
         for crop in crop_shape_dict:
             cv2.imwrite(crop, crop_shape_dict[crop])
 
-        logger.info(' %s Successfully split into folders: %s | %s | %s | %s', pic, NORMAL_JIGSAW_PATH,
+        logger.info(' %s Successfully split into folders: %s | %s | %s | %s', pic, ORIGINAL_JIGSAW_PATH,
                     FILTERED_JUNK_PATH, CANNY_JIGSAW_PATH, FULL_IMAGE_CANNY_JIGSAW_PATH)
 
     cv2.imshow('canny', canny)

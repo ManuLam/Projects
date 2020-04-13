@@ -49,7 +49,7 @@ def locate_straight_sides_list(filename_list, full_display=False, show=False):
             cv2.waitKey(0)
 
 
-def locate_straight_side_img(img, full_display=False, min_line_length=65, max_line_gap=12, show=False):
+def locate_straight_side_img(img, full_display=False, min_line_length=55, max_line_gap=10, show=False):
         straight_edge_count = 0
         edges = cv2.Canny(img, 75, 150)
 

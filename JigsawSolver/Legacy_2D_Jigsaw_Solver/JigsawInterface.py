@@ -2,7 +2,6 @@
 # Image joiner, stakes the splits and creates a randomized jigsaw
 
 from PyQt5.QtWidgets import QApplication
-from tkinter import Button, Tk
 
 from JigsawSolver.ImageSplitter import image_splitter
 from JigsawSolver.PieceLocator import piece_finder, compare_image_main, \
@@ -40,6 +39,7 @@ if __name__ == '__main__':
 
     app = QApplication([])
     button = Button()
+    button.show()
 
     # Linking buttons into our interface
     create_jigsaw_from_image(SOLVED_JIGSAW_IMAGE, UNSOLVED_JIGSAW_IMAGE, N_PIECES)
@@ -48,10 +48,3 @@ if __name__ == '__main__':
     #piece_finder_with_buttons(PATH, UNSOLVED_JIGSAW_IMAGE, SLICE_DIR, diff=0.005)
     piece_finder_with_swirl(PATH, UNSOLVED_JIGSAW_IMAGE, SLICE_DIR, diff=0.005)
 
-    '''
-    #Test piece with image
-    try:
-        compare_image_main('jigsaw_image_2.jpg', UNSOLVED_JIGSAW_IMAGE, diff=0.9, show=True)
-    except:
-        1
-    '''
