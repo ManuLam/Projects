@@ -17,7 +17,7 @@ class JigsawPiece:
     STRAIGHT_SIDE_COUNT = 0  # 1 = side piece, 2 = corner
     straight_side_located = 0
     rotation = None  # Rotated piece from original position
-    centroid = None
+    centroid = None  # The geometric center of the Jigsaw piece
 
     def __init__(self, enriched_image_file, rotation_angle=None, line_params=None, centroid=None, show_enriched=False, show_sides=False):
         """
