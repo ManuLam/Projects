@@ -9,9 +9,10 @@ import operator
 from functools import reduce
 from scipy.stats import norm
 from scipy.spatial.distance import cdist
-from global_config import CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, \
-    JIGSAW_PIECES_COUNT, ROTATED_PIECES_PATH, ROTATED_PIECES, HARRIS_PIECES_PATH, HARRIS_PIECES, \
-    CLASSIFICATION_PATH, CLASSIFICATION_PIECE, ENRICHED_PIECES_PATH, ENRICHED_PIECE
+from global_config import ORIGINAL_JIGSAW_PATH, ORIGINAL_JIGASW_PIECE, CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, \
+    JIGSAW_PIECES_COUNT, ROTATED_ORIGINAL_PIECES_PATH, ROTATED_ORIGINAL_CANNY_PIECES, ROTATED_CANNY_PIECES_PATH, ROTATED_CANNY_PIECES, HARRIS_PIECES_PATH, HARRIS_PIECES, \
+    CLASSIFICATION_PATH, CLASSIFICATION_PIECE, ENRICHED_EDGE_CLASSIFIER_PIECES_PATH, ENRICHED_EDGE_CLASSIFIER_PIECE, ENRICHED_INNER_OUTER_PIECES_PATH, \
+    ENRICHED_INNER_OUTER_PIECE,colours
 from compute_sides import draw_lines_from_corner, classify_jigsaw_edges, compute_lines_params
 from JigsawPiece import JigsawPiece
 
@@ -41,13 +42,16 @@ def harris_corner_with_rotation(show=True):
     jigsaw_pieces = []
 
     for image_number in range(0, JIGSAW_PIECES_COUNT):
-        filename = CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)
+        original_filename = ORIGINAL_JIGSAW_PATH + ORIGINAL_JIGASW_PIECE.format(image_number)
+        canny_filename = CANNY_JIGSAW_PATH + CANNY_JIGASW_PIECE.format(image_number)
 
         try:
-            harris_img = cv2.imread(filename)
-            rotated_harris_image = cv2.imread(filename)
-            rotated_classifer_img = cv2.imread(filename)
-            rotated_img = cv2.imread(filename)
+            harris_img = cv2.imread(canny_filename)
+            rotated_harris_image = cv2.imread(canny_filename)
+            rotated_classifer_img = cv2.imread(canny_filename)
+            rotated_img_canny = cv2.imread(canny_filename)
+            rotated_img_original = cv2.imread(original_filename)
+
 
             gray = cv2.cvtColor(harris_img, cv2.COLOR_BGR2GRAY)
             gray = np.float32(gray)
@@ -92,29 +96,38 @@ def harris_corner_with_rotation(show=True):
 
                 ####################
                 # Extract edges and define them as In or Out, must rotate corner points
-                rotated_gray4, M4 = rotate_image(rotated_img, rotation_angle)   # Untouched image that is rotated
+                rotated_gray4, M4 = rotate_image(rotated_img_canny, rotation_angle)   # Untouched canny image that is rotated
+                rotated_original, M5 = rotate_image(rotated_img_original, rotation_angle)   # Untouched original image that is rotated
                 rotated_corners = np.array(np.round([M3.dot((point[0], point[1], 1)) for point in corners])).astype(np.int)  # Rotate corner points
 
                 image_classifier = classify_jigsaw_edges(rotated_gray4, rotated_corners)  # Classify jigsaw edges to 4 sides
                 ####################
 
-                logger.info("%s rotated by %d degrees", filename, rotation_angle)
+                logger.info("%s rotated by %d degrees", canny_filename, rotation_angle)
 
             except:
-                logger.info("No points found for: ", filename)
+                logger.info("No points found for: ", canny_filename)
                 pass
 
             cv2.imwrite(HARRIS_PIECES_PATH + HARRIS_PIECES.format(image_number), harris_img)
-            cv2.imwrite(ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number), rotated_gray2)
-            cv2.imwrite(ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number), rotated_gray2)
+            cv2.imwrite(ROTATED_ORIGINAL_PIECES_PATH + ROTATED_ORIGINAL_CANNY_PIECES.format(image_number), rotated_original)
+            cv2.imwrite(ROTATED_CANNY_PIECES_PATH + ROTATED_CANNY_PIECES.format(image_number), rotated_gray2)
             cv2.imwrite(CLASSIFICATION_PATH + CLASSIFICATION_PIECE.format(image_number), rotated_gray3)
-            cv2.imwrite(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number), image_classifier)
+            cv2.imwrite(ENRICHED_EDGE_CLASSIFIER_PIECES_PATH + ENRICHED_EDGE_CLASSIFIER_PIECE.format(image_number), image_classifier)
 
             # Create a jigsaw piece object that can later be used for solving the puzzle
-            new_jigsaw_piece = JigsawPiece(ENRICHED_PIECES_PATH + ENRICHED_PIECE.format(image_number),
+            new_jigsaw_piece = JigsawPiece(ENRICHED_EDGE_CLASSIFIER_PIECES_PATH + ENRICHED_EDGE_CLASSIFIER_PIECE.format(image_number),
                                            rotation_angle,
                                            compute_lines_params(rotated_corners),
                                            find_centroid(rotated_corners))
+
+
+            sides = new_jigsaw_piece.get_sides()
+            new_classified_inner_outer = inner_outer_classifier(new_jigsaw_piece, sides)
+
+            new_jigsaw_piece.set_image_file(ENRICHED_INNER_OUTER_PIECES_PATH + ENRICHED_INNER_OUTER_PIECE.format(image_number))
+            cv2.imwrite(ENRICHED_INNER_OUTER_PIECES_PATH + ENRICHED_INNER_OUTER_PIECE.format(image_number), new_classified_inner_outer)
+
             jigsaw_pieces.append(new_jigsaw_piece)
 
             if show:
@@ -122,14 +135,43 @@ def harris_corner_with_rotation(show=True):
                 cv2.imshow('piece3', rotated_gray1)
                 cv2.imshow('piece2', rotated_gray2)
                 cv2.imshow('piece4', rotated_gray3)
+                cv2.imshow('piece5', image_classifier)
+                cv2.imshow('piece6', new_classified_inner_outer)
 
                 cv2.waitKey(0)
 
         except:
             raise
-            logger.info('No corners found for: ', filename, )
+            logger.info('No corners found for: ', canny_filename, )
 
     return jigsaw_pieces
+
+
+def inner_outer_classifier(piece, sides):
+    h, w, _ = cv2.imread(piece.image_file).shape
+    temp_image = 'temp_side_image.png'
+    template_image = np.zeros((h, w, 3), np.uint8)
+
+    for side in sides:
+        cv2.imwrite(temp_image, side['pixels'])
+        side_image = cv2.imread(temp_image)
+
+        ys,xs,z = np.nonzero(side_image)
+        image_classifier = np.zeros(side_image.shape, np.uint8)
+
+        def colour_edges(side_type, colour):
+            if side['edge_type'] == side_type:
+                for x, y in zip(xs, ys):
+                    image_classifier[y, x] = colour
+
+        colour_edges('OUT', colours['RED'])
+        colour_edges('FLAT', colours['GREEN'])
+        colour_edges('IN', colours['BLUE'])
+
+        dst = cv2.addWeighted(template_image, 1, image_classifier, 1, 0.0)
+        template_image = dst
+
+    return template_image
 
 
 def find_centroid(pts):

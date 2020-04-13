@@ -1,11 +1,11 @@
 import logging
 import ColoredFormatter
 
-from cannyEdge import crop_jigsaw_pieces_from_image
-from global_config import FULL_JIGSAW_IMAGE, ROTATED_PIECES_PATH, ROTATED_PIECES, JIGSAW_PIECES_COUNT, \
+from canny_edge import crop_jigsaw_pieces_from_image
+from global_config import FULL_JIGSAW_IMAGE, ROTATED_CANNY_PIECES_PATH, ROTATED_CANNY_PIECES, JIGSAW_PIECES_COUNT, \
     FULL_IMAGE_CANNY_JIGSAW_PATH, FULL_IMAGE_CANNY_JIGASW_PIECE
-from harrisCorner import harris_corner_with_rotation
-from houghLinesP import locate_straight_sides_list, locate_full_canny_straight_sides
+from harris_corner import harris_corner_with_rotation
+from hough_lines_p import locate_straight_sides_list, locate_full_canny_straight_sides
 from PyQt5.QtWidgets import QApplication, QPushButton, QWidget
 
 
@@ -13,22 +13,22 @@ class Button(QWidget):
     def __init__(self):
         super().__init__()
 
-        start = QPushButton('piece splitter', self)
-        start.move(30, 5)
+        pieceSplitter = QPushButton('piece splitter', self)
+        pieceSplitter.move(30, 5)
 
-        stop = QPushButton('harris rotation', self)
-        stop.move(100, 5)
+        harrisRotation = QPushButton('harris rotation', self)
+        harrisRotation.move(100, 5)
 
-        hah = QPushButton('locate sides', self)
-        hah.move(170, 5)
+        locateSides = QPushButton('locate sides', self)
+        locateSides.move(170, 5)
 
-        hah1 = QPushButton('locate canny full sides', self)
-        hah1.move(240, 5)
+        locateSidesFull = QPushButton('locate canny full sides', self)
+        locateSidesFull.move(240, 5)
 
-        start.clicked.connect(self.crop_jigsaw_pieces_from_image)
-        stop.clicked.connect(self.harris_corner_with_rotation)
-        hah.clicked.connect(self.locate_straight_sides)
-        hah1.clicked.connect(self.locate_full_canny_straight_sides)
+        pieceSplitter.clicked.connect(self.crop_jigsaw_pieces_from_image)
+        harrisRotation.clicked.connect(self.harris_corner_with_rotation)
+        locateSides.clicked.connect(self.locate_straight_sides)
+        locateSidesFull.clicked.connect(self.locate_full_canny_straight_sides)
 
         self.setGeometry(0,595,800,50)
         self.setWindowTitle("Interface!")
@@ -38,7 +38,7 @@ class Button(QWidget):
     # Also filters out junk pieces
     @staticmethod
     def crop_jigsaw_pieces_from_image():
-        crop_jigsaw_pieces_from_image(FULL_JIGSAW_IMAGE, crop_out=True, save=True)
+        crop_jigsaw_pieces_from_image(FULL_JIGSAW_IMAGE, crop_out=True, show=True, save=True)
 
     # Finds the corners of each Jigsaw Piece and rotates the images to become parallel with our working plane
     # Each Jigsaw piece is stored in a side / non side folder
@@ -49,7 +49,7 @@ class Button(QWidget):
     # Apply HoughLines P onto each Rotated Jigsaw piece to find side edges
     @staticmethod
     def locate_straight_sides():
-        locate_straight_sides_list([ROTATED_PIECES_PATH + ROTATED_PIECES.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])
+        locate_straight_sides_list([ROTATED_CANNY_PIECES_PATH + ROTATED_CANNY_PIECES.format(image_number) for image_number in range(0, JIGSAW_PIECES_COUNT)])
 
     # Apply HoughLines P onto Entire canny edged image
     @staticmethod
