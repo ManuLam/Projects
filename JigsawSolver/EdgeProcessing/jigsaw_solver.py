@@ -215,5 +215,5 @@ def match_module(side, piece_list):
 # # Template maker, creates a fresh template at the start, then traverses the array to find pieces
 
 
-jigsaw_pieces = harris_corner_with_rotation(show=True)
+jigsaw_pieces = harris_corner_with_rotation(show=False)
 solve_jisaw_array(jigsaw_pieces, show=False)

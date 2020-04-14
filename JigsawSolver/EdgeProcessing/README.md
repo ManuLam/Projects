@@ -18,6 +18,9 @@
     
 ## compute_sides.py
     Includes logic for classifying a piece and then enriching them with colour.
+    These classifiers includes:
+        - Side enrichment (Bottom/Left/Right/Top side of a piece)
+        - Edge Type enrichment (Inner/Outer/Flat of a side of a piece)
    
 ## hough_lines_p.py
     This module includes the line dectection algorithms for determine if an edge is flat

@@ -11,8 +11,8 @@ from scipy.spatial.distance import cdist
 from global_config import ORIGINAL_JIGSAW_PATH, ORIGINAL_JIGASW_PIECE, CANNY_JIGSAW_PATH, CANNY_JIGASW_PIECE, \
     JIGSAW_PIECES_COUNT, ROTATED_ORIGINAL_PIECES_PATH, ROTATED_ORIGINAL_CANNY_PIECES, ROTATED_CANNY_PIECES_PATH, ROTATED_CANNY_PIECES, HARRIS_PIECES_PATH, HARRIS_PIECES, \
     CLASSIFICATION_PATH, CLASSIFICATION_PIECE, ENRICHED_EDGE_CLASSIFIER_PIECES_PATH, ENRICHED_EDGE_CLASSIFIER_PIECE, ENRICHED_INNER_OUTER_PIECES_PATH, \
-    ENRICHED_INNER_OUTER_PIECE,colours
-from compute_sides import draw_lines_from_corner, classify_jigsaw_edges, compute_lines_params
+    ENRICHED_INNER_OUTER_PIECE
+from compute_sides import draw_lines_from_corner, classify_jigsaw_edges, compute_lines_params, inner_outer_classifier
 from JigsawPiece import JigsawPiece
 
 logger = logging.getLogger(__name__)
@@ -172,53 +172,6 @@ def harris_corner_with_rotation(show=True):
             logger.info('No corners found for: ', canny_filename)
 
     return jigsaw_pieces
-
-
-def inner_outer_classifier(piece, sides):
-    """
-    This function is the 2nd Classifier for colouring Jigsaw pieces based off edge type.
-
-    FLAT edge = GREEN
-    OUTER edge = RED
-    INNER edge = BLUE
-
-    :param piece: image of Jigsaw piece to be recoloured
-    :param sides: 4 Line parameters that define the sides
-    :return: A new classified image based on edge type
-    """
-
-    h, w, _ = cv2.imread(piece.image_file).shape  # Read in the original Jigsaw piece's dimensions
-    temp_image = 'temp_side_image.png'  # temporary image name
-    template_image = np.zeros((h, w, 3), np.uint8)  # Creating a template image that gets updated
-
-    # Go through all 4 sides of the piece and colour them
-    for side in sides:
-        cv2.imwrite(temp_image, side['pixels'])  # takes the passed Jigsaw piece's side and writes on the temp image
-        side_image = cv2.imread(temp_image)  # Read the temp image
-
-        ys,xs,z = np.nonzero(side_image)  # Take all the pixels
-        image_classifier = np.zeros(side_image.shape, np.uint8)  # create a new image
-
-        def colour_edges(side_type, colour):
-            """
-            This function takes a side type and the colour and if the side matches, we colour that side
-
-            :param side_type: OUT/FLAT/IN
-            :param colour: RED/GREEN/BLUE
-            """
-
-            if side['edge_type'] == side_type:     # If the side is matched
-                for x, y in zip(xs, ys):
-                    image_classifier[y, x] = colour   # Colour the image side
-
-        colour_edges('OUT', colours['RED'])     # Colour Outer edge type with RED
-        colour_edges('FLAT', colours['GREEN'])  # Colour Flat edge type GREEN
-        colour_edges('IN', colours['BLUE'])     # Colour Inner edge type BLUE
-
-        dst = cv2.addWeighted(template_image, 1, image_classifier, 1, 0.0)  # Merge two images together
-        template_image = dst   # Update the template image
-
-    return template_image
 
 
 def find_centroid(pts):
