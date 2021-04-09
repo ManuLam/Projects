@@ -13,14 +13,23 @@ This is my folder where I upload my projects that I have done over the years.
 	
 # 2019-2018
 - Housing Website as 3rd Year College Group project
-	- Frontend provides a login feature, a feature to select one room per student, and shows displayed rooms that are available.
-	-  Backend stored on FireBase
+	-	Frontend provides a login feature, a feature to select one room per student, and shows displayed rooms that are available.
+	- 	Backend stored on FireBase
+	
 	
 - Maynooth University - Summer Program Undergraduate Researcher
 	-	Literature review on Virtual Reality Gaming menus and Player behaviors
 	-	Learning and using R during the internship
 	-	Transcribing raw datasets into secondary data
 	-	Analyzing the secondary data and implementing the visualization of data within Markov Models and Pie charts
+
+
+- Maynooth University - Full-stack Web Developer (Collaborative Learning Website with Annotations)
+	-	Full-stack Web Development using the MEAN Stack
+	-	Creating my own plugins (taggings, comment feed, and deletion feature)
+	-	A unique comment feed that displayed all comments clearly
+	-	Creating a detailed report and documentation for the Annotation website
+
 
 - Rubik's Cube (Partial)
 	- No solving logic (for now)
