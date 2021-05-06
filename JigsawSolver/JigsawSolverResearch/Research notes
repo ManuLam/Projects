@@ -1,0 +1,15 @@
+Canny Edge Detection -> For detecting edges of jigsaw
+Harris Corner Detection -> For rotating the jigsaw pieces
+
+==========
+Scan in all Jigsaw pieces, rotate them into exact pixels
+Compare them to other pieces / original image
+
+if piece is not 'in exact 0,90,180,270 angles' rotate them and then compare..
+
+To detect lines angles
+https://stackoverflow.com/questions/46731947/detect-angle-and-rotate-an-image-in-python
+
+
+==========
+Sift and Shift (Patented) 
