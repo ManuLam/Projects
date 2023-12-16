@@ -3,6 +3,12 @@
 
 This is my folder where I upload my projects that I have done over the years.
 
+# 2020 - present
+- Huge ComputerVision projects that help me fully automate a process within a game.
+	- Capturing an image, enhancement of pixels -> decision brain that decides what to do.
+ 	- Integrated with Discord -> sending updates on request or periodically.
+  	- Flexible model that allows easy adding of new tasks.	 	
+
 # 2020
 - Jigsaw Solver as Final Year College project
 	- 1st step - Capture a full image of a scrambled jigsaw puzzle 
